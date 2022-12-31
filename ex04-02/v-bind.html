@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+
+	<title>Document</title>
+
+	<style>
+		.blue_style {
+			color: blue;
+		}
+	</style>
+</head>
+<body>
+	<div id="main">
+		<!-- v-bind 안에서도 자바스크립트를 사용할 수 있으므로 변수와 문장을 연결 -->
+		<h1 v-bind:class="colorName + '_style'">안녕하세요!</h1>
+		<!-- 콜론(:) 앞은 생략 가능 -->
+		<input :value="date">
+	</div>
+
+	<script>
+		let app = new Vue({
+			el: '#main',
+			data: {
+				date: `올해 연도: ${new Date().getFullYear()}`,
+				colorName: 'blue'
+			}
+		});
+	</script>
+</body>
+</html>
