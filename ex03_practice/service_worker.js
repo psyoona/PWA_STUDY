@@ -25,14 +25,14 @@ self.addEventListener('activate', pEvent => {
 self.addEventListener('fetch', pEvent => {
 	pEvent.respondWith(
 		caches.match(pEvent.request)
-			.then(response => {
-				if(!response) {
+			.then(cacheData => {
+				if(!cacheData) {
 					console.log('네트워크에서 데이터 요청!', pEvent.request);
 					return fetch(pEvent.request);
 				}
 
 				console.log('캐시에서 데이터 요청!', pEvent.request);
-				return response;
+				return cacheData;
 			}).catch(error => console.log(error))
 	);
 });
