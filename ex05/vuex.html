@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+	<script src="https://unpkg.com/vuex@2.0.0"></script>
+
+	<title>Document</title>
+</head>
+<body>
+	<div id="app">
+		<h1>안녕하세요~!</h1>
+
+		<com-counter msg="카운터1"></com-counter>
+		<com-counter msg="카운터2"></com-counter>
+	</div>
+
+	<script>
+		// Vuex의 store 중앙에 state, mutations(setters), getters, actions를 정의
+
+		const store = new Vuex.Store({
+			// count 값을 상탯값으로 정의
+			state: {
+				count: 0
+			},
+			// mutations는 getters의 대칭되는 setters의 역할을 설정
+			mutations: {
+				// count 상탯값 증가
+				increaseCount: function(state){
+					return state.count++;
+				},
+				decreaseCount: state => state.count--
+			},
+			getters: {
+				// 상탯값 반환
+				getData(state){
+					return state.count;
+				}
+			},
+			actions: {
+				async decreaseData({
+					commit
+				}, state) {
+					// 가상으로 만든 원격 api 실행
+					const result = await api.decrement();
+
+					// 원격 api가 성공할 때 비로소 decreaseData 함수 실행
+					if (result) {
+						commit('decreaseCount');
+					}
+				}
+			}
+		});
+
+		const api = {
+			decrement() {
+				return new Promise((resolve) => {
+					setTimeout(() => {
+						resolve(true);
+					}, 1000);
+				});
+			}
+		}
+
+		Vue.component('com-counter', {
+			props: ['msg'],
+			template: `
+				<div>
+					<h2>{{msg}}</h2>
+					<p>카운터: {{getCount}}</p>
+					<button @click="increaseCount">+1 증가</button>
+					<button @click="decreaseCount">-1 감소(원격 API 실행)</button>
+					<hr>
+				</div>`,
+			computed: {
+				getCount() {
+					return store.getters.getData;
+				}
+			},
+			methods: {
+				increaseCount() {
+					store.commit('increaseCount');
+				},
+				decreaseCount() {
+					store.dispatch('decreaseData');
+				}
+			}
+		});
+
+		let gApp = new Vue({
+			el: '#app',
+			store
+		});
+	</script>
+</body>
+</html>
